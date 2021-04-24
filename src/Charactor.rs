@@ -3,7 +3,6 @@ use bevy::{
     input::{keyboard::KeyCode, Input},
 };
 
-/// This system prints 'A' key state
 pub fn keyboard_input_system(keyboard_input: Res<Input<KeyCode>>) {
     if keyboard_input.pressed(KeyCode::A) {
         info!("'A' currently pressed");
