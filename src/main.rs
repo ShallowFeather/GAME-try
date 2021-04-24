@@ -1,4 +1,5 @@
 mod Charactor;
+mod LoadImg;
 
 use bevy::{input::system::exit_on_esc_system, prelude::*};
 
@@ -12,7 +13,7 @@ fn main() {
         })
         .add_startup_system(setup.system())
         .add_plugins(DefaultPlugins)
-        .add_system(Charactor::keyboard_input_systems.system())
+        .add_system(Charactor::keyboard_input_system.system())
         .run();
 }
 
