@@ -1,7 +1,9 @@
 mod Charactor;
 mod LoadImg;
 
+
 use bevy::{input::system::exit_on_esc_system, prelude::*};
+use crate::LoadImg::ArrowsPlugin;
 
 fn main() {
     App::build()
@@ -14,6 +16,7 @@ fn main() {
         .add_startup_system(setup.system())
         .add_plugins(DefaultPlugins)
         .add_system(Charactor::keyboard_input_system.system())
+        .add_plugin(ArrowsPlugin)
         .run();
 }
 
