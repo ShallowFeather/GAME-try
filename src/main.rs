@@ -1,5 +1,7 @@
 mod Charactor;
 mod LoadImg;
+mod consts;
+mod types;
 
 
 use bevy::{input::system::exit_on_esc_system, prelude::*};

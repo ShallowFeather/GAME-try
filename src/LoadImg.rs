@@ -27,16 +27,18 @@ impl FromResources for MainCharator {
 }
 
 //space arrow
+use crate::consts::*;
 struct Arrow;
 
 pub struct SpawnTimer(Timer);
 
-pub fn spawn_arrows (commands: &mut Commands, materials: Res<MainCharator>, time: Res<Time>, mut timer: ResMut<SpawnTimer>,) {
+pub fn spawn_arrows (commands: &mut Commands, materials: Res<MainCharator>,
+                     time: Res<Time>, mut timer: ResMut<SpawnTimer>,) {
     if !timer.0.tick(time.delta_seconds()).just_finished() {
         return;
     }
 
-    let transform = Transform::from_translation(Vec3::new(-400., 0., 0., ));
+    let transform = Transform::from_translation(Vec3::new(SPAWN_POSITION., 0., 0., ));
     commands
         .spawn(SpriteBundle {
             material: materials.right_texture.clone(),
@@ -50,7 +52,7 @@ pub fn spawn_arrows (commands: &mut Commands, materials: Res<MainCharator>, time
 //move arrow
 fn move_arrows(time: Res<Time>, mut query: Query<(&mut Transform, &Arrow)>) {
     for (mut transform, _arrow) in query.iter_mut() {
-        transform.translation.x += time.delta_seconds() * 200.;
+        transform.translation.x += time.delta_seconds() * BASE_SPEED;
     }
 }
 
@@ -59,7 +61,7 @@ impl Plugin for ArrowsPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app
             .init_resource::<MainCharator>()
-            .add_resource(SpawnTimer(Timer::from_seconds(1.0, true)))
+            .add_resource(SpawnTimer(Timer::from_seconds(1.0, 1.)))
             .add_system(spawn_arrows.system())
             .add_system(move_arrows.system());
     }
