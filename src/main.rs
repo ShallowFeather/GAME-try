@@ -7,6 +7,7 @@ mod monsters;
 
 use bevy::{input::system::exit_on_esc_system, prelude::*};
 use crate::LoadImg::ArrowsPlugin;
+use crate::monsters::MonsterPlugin;
 
 fn main() {
     App::build()
@@ -19,7 +20,7 @@ fn main() {
         .add_startup_system(setup.system())
         .add_plugins(DefaultPlugins)
         .add_system(Charactor::keyboard_input_system.system())
-        .add_plugin(ArrowsPlugin)
+        .add_plugin(MonsterPlugin)
         .run();
 }
 
