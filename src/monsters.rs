@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use crate::consts::*;
+
 pub struct Monster {
     body_texture: Handle<ColorMaterial>,
 }
@@ -9,7 +10,7 @@ impl FromResources for Monster {
         let mut  materials = resources.get_mut::<Assets<ColorMaterial>>().unwrap();
         let asset_server = resources.get::<AssetServer>().unwrap();
 
-        let monsters_body = asset_server.load("image/monster.jpg");
+        let monsters_body = asset_server.load("images/monster.png");
 
         Monster {
             body_texture: materials.add(monsters_body.into()),
@@ -21,8 +22,8 @@ struct Ghost;
 
 pub struct SpawnTimer(Timer);
 
-pub fn spawn_up(commands: &mut Commands, materials: Res<Monster>,
-                time: Res<Time>, mut timer: Res<SpawnTimer>,) {
+pub fn spawn_up (commands: &mut Commands, materials: Res<Monster>,
+                     time: Res<Time>, mut timer: ResMut<SpawnTimer>,) {
     if !timer.0.tick(time.delta_seconds()).just_finished() {
         return;
     }
@@ -38,8 +39,8 @@ pub fn spawn_up(commands: &mut Commands, materials: Res<Monster>,
         .with(Ghost);
 }
 
-pub fn spawn_down(commands: &mut Commands, materials: Res<Monster>,
-                  time: Res<Time>, mut timer: Res<SpawnTimer>,) {
+pub fn spawn_down (commands: &mut Commands, materials: Res<Monster>,
+                 time: Res<Time>, mut timer: ResMut<SpawnTimer>,) {
     if !timer.0.tick(time.delta_seconds()).just_finished() {
         return;
     }
@@ -54,8 +55,8 @@ pub fn spawn_down(commands: &mut Commands, materials: Res<Monster>,
         .with(Ghost);
 }
 
-pub fn spawn_left(commands: &mut Commands, materials: Res<Monster>,
-                  time: Res<Time>, mut timer: Res<SpawnTimer>,) {
+pub fn spawn_left (commands: &mut Commands, materials: Res<Monster>,
+                 time: Res<Time>, mut timer: ResMut<SpawnTimer>,) {
     if !timer.0.tick(time.delta_seconds()).just_finished() {
         return;
     }
@@ -71,8 +72,8 @@ pub fn spawn_left(commands: &mut Commands, materials: Res<Monster>,
         .with(Ghost);
 }
 
-pub fn spawn_right(commands: &mut Commands, materials: Res<Monster>,
-                   time: Res<Time>, mut timer: Res<SpawnTimer>,) {
+pub fn spawn_right (commands: &mut Commands, materials: Res<Monster>,
+                 time: Res<Time>, mut timer: ResMut<SpawnTimer>,) {
     if !timer.0.tick(time.delta_seconds()).just_finished() {
         return;
     }
@@ -88,26 +89,26 @@ pub fn spawn_right(commands: &mut Commands, materials: Res<Monster>,
 }
 
 fn move_monster_up(time: Res<Time>, mut query: Query<(&mut Transform, &Ghost)>){
-    for (mut transform, _arrow) in query.iter_mut() {
-        transform.translation.y -= time.delta_seconds() * BASE_SPEED;
+    for (mut transform, _monster) in query.iter_mut() {
+        transform.translation.y -= time.delta_seconds() * 200.;
     }
 }
 
 fn move_monster_down(time: Res<Time>, mut query: Query<(&mut Transform, &Ghost)>){
-    for (mut transform, _arrow) in query.iter_mut() {
-        transform.translation.y += time.delta_seconds() * BASE_SPEED;
+    for (mut transform, ghost) in query.iter_mut() {
+        transform.translation.y += time.delta_seconds() * 200.;
     }
 }
 
 fn move_monster_left(time: Res<Time>, mut query: Query<(&mut Transform, &Ghost)>){
-    for (mut transform, _arrow) in query.iter_mut() {
+    for (mut transform, monster) in query.iter_mut() {
         transform.translation.x += time.delta_seconds() * BASE_SPEED;
     }
 }
 
 fn move_monster_right(time: Res<Time>, mut query: Query<(&mut Transform, &Ghost)>){
     for (mut transform, _arrow) in query.iter_mut() {
-        transform.translation.x -= time.delta_seconds() * BASE_SPEED;
+        transform.translation.x -= time.delta_seconds() * 200.;
     }
 }
 

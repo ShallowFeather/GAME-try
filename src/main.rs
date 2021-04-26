@@ -1,13 +1,12 @@
 mod Charactor;
-mod LoadImg;
 mod consts;
 mod types;
 mod monsters;
-
+mod LoadImg;
 
 use bevy::{input::system::exit_on_esc_system, prelude::*};
-use crate::LoadImg::ArrowsPlugin;
 use crate::monsters::MonsterPlugin;
+use crate::LoadImg::ArrowsPlugin;
 
 fn main() {
     App::build()
@@ -21,6 +20,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_system(Charactor::keyboard_input_system.system())
         .add_plugin(MonsterPlugin)
+        //.add_plugin(ArrowsPlugin)
         .run();
 }
 
