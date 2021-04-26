@@ -1,10 +1,10 @@
 use bevy::prelude::*;
 
 pub struct MainCharator {
-    up_texture: Handle<ColorMaterial>,
-    down_texture: Handle<ColorMaterial>,
-    right_texture: Handle<ColorMaterial>,
-    left_texture: Handle<ColorMaterial>,
+    red_texture: Handle<ColorMaterial>,
+    blue_texture: Handle<ColorMaterial>,
+    green_texture: Handle<ColorMaterial>,
+    border_texture: Handle<ColorMaterial>,
 }
 
 impl FromResources for MainCharator {
@@ -12,16 +12,15 @@ impl FromResources for MainCharator {
         let mut materials = resources.get_mut::<Assets<ColorMaterial>>().unwrap();
         let asset_server = resources.get::<AssetServer>().unwrap();
 
-        let up_handle = asset_server.load("images/");
-        let down_handle = asset_server.load("images/arrow_red.png");
-        let right_handle = asset_server.load("images/");
-        let left_handle = asset_server.load("images/");
-
+        let red_handle = asset_server.load("images/arrow_red.png");
+        let blue_handle = asset_server.load("images/arrow_blue.png");
+        let green_handle = asset_server.load("images/arrow_green.png");
+        let border_handle = asset_server.load("images/arrow_border.png");
         MainCharator {
-            up_texture: materials.add(up_handle.into()),
-            down_texture: materials.add(down_handle.into()),
-            right_texture: materials.add(right_handle.into()),
-            left_texture: materials.add(left_handle.into())
+            red_texture: materials.add(red_handle.into()),
+            blue_texture: materials.add(blue_handle.into()),
+            green_texture: materials.add(green_handle.into()),
+            border_texture: materials.add(border_handle.into()),
         }
     }
 }
@@ -41,8 +40,8 @@ pub fn spawn_arrows (commands: &mut Commands, materials: Res<MainCharator>,
     let transform = Transform::from_translation(Vec3::new(SPAWN_POSITION, 0., 0., ));
     commands
         .spawn(SpriteBundle {
-            material: materials.right_texture.clone(),
-            sprite: Sprite::new(Vec2::new(140., 140.)),
+            material: materials.red_texture.clone(),
+            sprite: Sprite::new(Vec2::new(50., 50.)),//size
             transform,
             ..Default::default()
         })
