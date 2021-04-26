@@ -38,7 +38,7 @@ pub fn spawn_arrows (commands: &mut Commands, materials: Res<MainCharator>,
         return;
     }
 
-    let transform = Transform::from_translation(Vec3::new(SPAWN_POSITION., 0., 0., ));
+    let transform = Transform::from_translation(Vec3::new(SPAWN_POSITION, 0., 0., ));
     commands
         .spawn(SpriteBundle {
             material: materials.right_texture.clone(),
@@ -61,7 +61,7 @@ impl Plugin for ArrowsPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app
             .init_resource::<MainCharator>()
-            .add_resource(SpawnTimer(Timer::from_seconds(1.0, 1.)))
+            .add_resource(SpawnTimer(Timer::from_seconds(1.0, true)))
             .add_system(spawn_arrows.system())
             .add_system(move_arrows.system());
     }
