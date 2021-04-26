@@ -2,6 +2,7 @@ mod Charactor;
 mod LoadImg;
 mod consts;
 mod types;
+mod monsters;
 
 
 use bevy::{input::system::exit_on_esc_system, prelude::*};
