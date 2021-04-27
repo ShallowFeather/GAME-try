@@ -1,8 +1,8 @@
 mod Charactor;
 mod consts;
-mod types;
 mod monsters;
 mod LoadImg;
+mod types;
 
 use bevy::{input::system::exit_on_esc_system, prelude::*};
 use crate::monsters::MonsterPlugin;
