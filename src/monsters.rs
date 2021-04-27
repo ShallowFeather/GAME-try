@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use crate::consts::*;
+use crate::types::*;
 
 pub struct Monster {
     body_texture: Handle<ColorMaterial>,

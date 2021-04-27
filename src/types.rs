@@ -34,8 +34,8 @@ impl Directions {
         match self {
             Directions::Up => {400.}
             Directions::Down => {-400.}
-            Directions::Right => {0}
-            Directions::Left => {0}
+            Directions::Right => {0.}
+            Directions::Left => {0.}
         }
     }
 }
@@ -90,3 +90,4 @@ pub fn load_config() -> SongConfig {
         ]
     }
 }
+
