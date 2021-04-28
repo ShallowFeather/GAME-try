@@ -1,131 +1,37 @@
 use bevy::prelude::*;
-use crate::consts::*;
-use crate::types::*;
 
-pub struct Monster {
-    body_texture: Handle<ColorMaterial>,
+struct SpriteSheets {
+    map_tiles: Handle<TextureAtlas>,
 }
 
-impl FromResources for Monster {
-    fn from_resources(resources: &Resources) -> Self {
-        let mut  materials = resources.get_mut::<Assets<ColorMaterial>>().unwrap();
-        let asset_server = resources.get::<AssetServer>().unwrap();
+fn use_sprites(
+    handles: Res<SpriteSheets>,
+    atlases: Res<Assets<TextureAtlas>>,
+    textures: Res<Assets<Texture>>,
+) {
+    // Could be `None` if the asset isn't loaded yet
+    if let Some(atlas) = atlases.get(&handles.map_tiles) {
+        // do something with the texture atlas
+    }
 
-        let monsters_body = asset_server.load("images/monster.png");
-
-        Monster {
-            body_texture: materials.add(monsters_body.into()),
-        }
+    // Can use a path instead of a handle
+    if let Some(map_tex) = textures.get("map.png") {
+        // if "map.png" was loaded, we can use it!
     }
 }
 
-struct Ghost;
-
-pub struct SpawnTimer(Timer);
-
-pub fn spawn_up (commands: &mut Commands, materials: Res<Monster>,
-                     time: Res<Time>, mut timer: ResMut<SpawnTimer>,) {
-    if !timer.0.tick(time.delta_seconds()).just_finished() {
-        return;
-    }
-
-    let transform = Transform::from_translation(Vec3::new(0., 400., 0.));
-    commands
-        .spawn(SpriteBundle {
-            material: materials.body_texture.clone(),
-            sprite: Sprite::new(Vec2::new(50., 50.)),//size
-            transform,
-            ..Default::default()
-        })
-        .with(Ghost);
+pub struct MonsterPosition {
+    x: f32,
+    y: f32,
 }
 
-pub fn spawn_down (commands: &mut Commands, materials: Res<Monster>,
-                 time: Res<Time>, mut timer: ResMut<SpawnTimer>,) {
-    if !timer.0.tick(time.delta_seconds()).just_finished() {
-        return;
-    }
-    let transform = Transform::from_translation(Vec3::new(0., -400., 0.));
-    commands
-        .spawn(SpriteBundle {
-            material: materials.body_texture.clone(),
-            sprite: Sprite::new(Vec2::new(50., 50.)),//size
-            transform,
-            ..Default::default()
-        })
-        .with(Ghost);
+struct Monster;
+
+struct Monstermer(Timer);
+
+fn spawn_up(commands: &mut Commands, time: Res<Time>, mut timer: ResMut<SpawnTimer>） {
+    let transform_UP = Transform::from_translation(Vec2::new(-400., 0.));
+    let transform_DOWN = Transform::from_translation(Vec2::new(400., 0. ));
 }
 
-pub fn spawn_left (commands: &mut Commands, materials: Res<Monster>,
-                 time: Res<Time>, mut timer: ResMut<SpawnTimer>,) {
-    if !timer.0.tick(time.delta_seconds()).just_finished() {
-        return;
-    }
 
-    let transform = Transform::from_translation(Vec3::new(-400., 0., 0.));
-    commands
-        .spawn(SpriteBundle {
-            material: materials.body_texture.clone(),
-            sprite: Sprite::new(Vec2::new(50., 50.)),//size
-            transform,
-            ..Default::default()
-        })
-        .with(Ghost);
-}
-
-pub fn spawn_right (commands: &mut Commands, materials: Res<Monster>,
-                 time: Res<Time>, mut timer: ResMut<SpawnTimer>,) {
-    if !timer.0.tick(time.delta_seconds()).just_finished() {
-        return;
-    }
-    let transform = Transform::from_translation(Vec3::new(400., 0., 0.));
-    commands
-        .spawn(SpriteBundle {
-            material: materials.body_texture.clone(),
-            sprite: Sprite::new(Vec2::new(50., 50.)),//size
-            transform,
-            ..Default::default()
-        })
-        .with(Ghost);
-}
-
-fn move_monster_up(time: Res<Time>, mut query: Query<(&mut Transform, &Ghost)>){
-    for (mut transform, _monster) in query.iter_mut() {
-        transform.translation.y -= time.delta_seconds() * 200.;
-    }
-}
-
-fn move_monster_down(time: Res<Time>, mut query: Query<(&mut Transform, &Ghost)>){
-    for (mut transform, ghost) in query.iter_mut() {
-        transform.translation.y += time.delta_seconds() * 200.;
-    }
-}
-
-fn move_monster_left(time: Res<Time>, mut query: Query<(&mut Transform, &Ghost)>){
-    for (mut transform, monster) in query.iter_mut() {
-        transform.translation.x += time.delta_seconds() * BASE_SPEED;
-    }
-}
-
-fn move_monster_right(time: Res<Time>, mut query: Query<(&mut Transform, &Ghost)>){
-    for (mut transform, _arrow) in query.iter_mut() {
-        transform.translation.x -= time.delta_seconds() * 200.;
-    }
-}
-
-pub struct MonsterPlugin;
-impl Plugin for MonsterPlugin {
-    fn build(&self, app: &mut AppBuilder) {
-        app
-            .init_resource::<Monster>()
-            .add_resource(SpawnTimer(Timer::from_seconds(1.0, true)))
-            .add_system(spawn_up.system())
-            .add_system(spawn_down.system())
-            .add_system(spawn_left.system())
-            .add_system(spawn_right.system())
-            .add_system(move_monster_up.system())
-            .add_system(move_monster_down.system())
-            .add_system(move_monster_left.system())
-            .add_system(move_monster_right.system());
-    }
-}

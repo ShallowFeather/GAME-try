@@ -1,29 +1,22 @@
-mod Charactor;
-mod consts;
-mod monsters;
-mod LoadImg;
-mod types;
+use bevy::prelude::*;
+use bevy::render::render_graph::base::node::CAMERA_2D;
+use bevy::render::camera::Camera;
 
-use bevy::{input::system::exit_on_esc_system, prelude::*};
-use crate::monsters::MonsterPlugin;
-use crate::LoadImg::ArrowsPlugin;
+mod monsters;
 
 fn main() {
     App::build()
-        .add_resource(WindowDescriptor {
-            title: "SF".to_string(),
-            width: 800.,
-            height: 600.,
-            ..Default::default()
-        })
         .add_startup_system(setup.system())
-        .add_plugins(DefaultPlugins)
-        .add_system(Charactor::keyboard_input_system.system())
-        .add_plugin(MonsterPlugin)
-        //.add_plugin(ArrowsPlugin)
         .run();
 }
 
-fn setup(commands: &mut Commands) {
-    commands.spawn(Camera2dBundle::default());
+fn setup(mut commands: Commands, asset_server: Res<AssetServer>,) {
+    let normal_texture = textures.get("images/monster.png");
+    let mut camera = Camera::default();
+    commands.spawn_bundle((
+        // position the camera like bevy would do by default for 2D:
+        Transform::from_translation(Vec3::new(0.0, 0.0, 0.0)),
+        GlobalTransform::default(),
+        camera,
+    ));
 }
