@@ -3,6 +3,7 @@ use bevy::render::render_graph::base::node::CAMERA_2D;
 use bevy::render::camera::Camera;
 
 mod monsters;
+mod types;
 
 fn main() {
     App::build()
