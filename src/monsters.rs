@@ -1,22 +1,27 @@
 use bevy::prelude::*;
+use crate::time::ControlledTime;
+use crate::types::*;
+use crate::ScoreResource;
+use bevy::prelude::*;
 
-struct SpriteSheets {
-    map_tiles: Handle<TextureAtlas>,
+
+struct  MonsterMaterial {
+    one_click: Handle<ColorMaterial>,
+    more_click: Handle<ColorMaterial>,
 }
 
-fn use_sprites(
-    handles: Res<SpriteSheets>,
-    atlases: Res<Assets<TextureAtlas>>,
-    textures: Res<Assets<Texture>>,
-) {
-    // Could be `None` if the asset isn't loaded yet
-    if let Some(atlas) = atlases.get(&handles.map_tiles) {
-        // do something with the texture atlas
-    }
+impl FromWorld for MonsterMaterial {
+    fn from_world(world: &mut World) -> Self {
+        let world = world.cell();
+        let mut material = world.get_resource_mut::<Assets<ColorMaterial>>().unwrap();
+        let asset_server = world.get_resource::<AssetServer>().unwrap();
 
-    // Can use a path instead of a handle
-    if let Some(map_tex) = textures.get("map.png") {
-        // if "map.png" was loaded, we can use it!
+        let one_hit = asset_server.load("images/monster.png");
+        let more_hit = asset_server.load("images/monster.png");
+        MonsterMaterial {
+            one_click: material.add(one_hit.into()),
+            more_click: (material.add(more_hit.into())),
+        }
     }
 }
 
@@ -25,13 +30,23 @@ pub struct MonsterPosition {
     y: f32,
 }
 
-struct Monster;
+struct Monster {
+    click: Click,
+}
 
-struct Monstermer(Timer);
+fn spawn_monster(mut commands: Commands, mut song_config: ResMut<SongConfig>, materials: Res<MonsterMaterial>, time: Res<ControlledTime>,) {
+    let secs = time.seconds_since_startup() - 2;
+    let secs_last = secs - time.delta_seconds_f64();
+    let mut remove_counter = 0;
+    for monster in &song_config.monsters {
+        if secs_last < monster.spawn_time && monster.spawn_time < secs {
+            remove_counter += 1;
+            let material = match monster.click {
+                Click::
+            }
+        }
+    }
 
-fn spawn_up(commands: &mut Commands, time: Res<Time>, mut timer: ResMut<SpawnTimer>） {
-    let transform_UP = Transform::from_translation(Vec2::new(-400., 0.));
-    let transform_DOWN = Transform::from_translation(Vec2::new(400., 0. ));
 }
 
 
