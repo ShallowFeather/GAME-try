@@ -41,9 +41,12 @@ fn spawn_monster(mut commands: Commands, mut song_config: ResMut<SongConfig>, ma
     for monster in &song_config.monsters {
         if secs_last < monster.spawn_time && monster.spawn_time < secs {
             remove_counter += 1;
-            let material = match monster.click {
-                Click::
-            }
+            let material = match monster.speed {
+                Speed::OneClick => materials.one_click.clone(),
+                Speed::MoreClick => materials.more_click.clone(),
+            };
+
+            let mut transform = Transform::from_translation(Vec3::new())
         }
     }
 
