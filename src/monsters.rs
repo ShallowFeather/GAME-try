@@ -15,7 +15,6 @@ impl FromWorld for MonsterMaterial {
         let world = world.cell();
         let mut material = world.get_resource_mut::<Assets<ColorMaterial>>().unwrap();
         let asset_server = world.get_resource::<AssetServer>().unwrap();
-
         let one_hit = asset_server.load("images/monster.png");
         let more_hit = asset_server.load("images/monster.png");
         MonsterMaterial {
@@ -34,6 +33,8 @@ struct Monster {
     click: Click,
 }
 
+use crate::consts;
+
 fn spawn_monster(mut commands: Commands, mut song_config: ResMut<SongConfig>, materials: Res<MonsterMaterial>, time: Res<ControlledTime>,) {
     let secs = time.seconds_since_startup() - 2;
     let secs_last = secs - time.delta_seconds_f64();
@@ -46,7 +47,10 @@ fn spawn_monster(mut commands: Commands, mut song_config: ResMut<SongConfig>, ma
                 Speed::MoreClick => materials.more_click.clone(),
             };
 
-            let mut transform = Transform::from_translation(Vec3::new())
+            let mut transform_up = Transform::from_translation(Vec3::new(’SPAWN_UP_X, SPAWN_UP_Y, 0.));
+            let mut transform_down = Transform::from_translation(Vec3::new());
+            let mut transform_left = Transform::from_translation(Vec3::new());
+            let mut transform_right = Transform::from_translation(Vec3::new());
         }
     }
 
