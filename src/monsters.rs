@@ -46,10 +46,20 @@ fn spawn_monster(mut commands: Commands, mut song_config: ResMut<SongConfig>, ma
                 Speed::MoreClick => materials.more_click.clone(),
             };
             let mut transform_up = Transform::from_translation(Vec3::new(SPAWN_UP_X, SPAWN_UP_Y, 0.));
-            
+
         }
     }
 
+}
+
+fn move_monsters(
+    time: Res<Time>,
+    mut query: Query<(&mut Transform, monster)>
+){
+
+    for(mut transform, _monsters) in query.iter_mut() {
+        transform.
+    }
 }
 
 
