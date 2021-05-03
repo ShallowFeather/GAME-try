@@ -18,12 +18,7 @@ pub struct Player {
     Path: Directions,
 }
 
-impl Directions {
-    pub fn change_path(&self, input: Res<Input<KeyCode>>) {
-
-
-    }
-}
+ub fn move_character(input: Res<Input<KeyCode>>, mut )
 
 pub fn spawn_character(mut commands: Commands, material: Res<Materials>) {
     commands
