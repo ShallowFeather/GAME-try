@@ -45,21 +45,8 @@ fn spawn_monster(mut commands: Commands, mut song_config: ResMut<SongConfig>, ma
                 Speed::OneClick => materials.one_click.clone(),
                 Speed::MoreClick => materials.more_click.clone(),
             };
-
             let mut transform_up = Transform::from_translation(Vec3::new(SPAWN_UP_X, SPAWN_UP_Y, 0.));
-            let mut transform_down = Transform::from_translation(Vec3::new());
-            let mut transform_left = Transform::from_translation(Vec3::new());
-            let mut transform_right = Transform::from_translation(Vec3::new());
-            commands
-                .spawn_bundle(SpriteBundle {
-                    material,
-                    sprite: Sprite::new(Vec2::new(140., 140.)),
-                    transform,
-                    ..Default::default()
-                })
-                .insert(Monster {
-                    click: 
-                })
+            
         }
     }
 

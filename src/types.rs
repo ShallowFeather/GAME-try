@@ -27,12 +27,12 @@ impl Directions {
 
     pub fn key_pressed(&self, input: &Input<KeyCode>) -> bool {
         let keys = match self {
-            Directions::Up  [KeyCode::Up, KeyCode::W],
+            Directions::Up => [KeyCode::Up, KeyCode::W],
             Directions::Down => [KeyCode::Down, KeyCode::S],
             Directions::Left => [KeyCode::Left, KeyCode::A],
             Directions::Right => [KeyCode::Right, KeyCode::D],
         };
-        keys.iter().any(|code| input.just_pressed(*code))
+      keys.iter().any(|code| input.pressed(*code))
     }
 
      fn x(&self) -> f32 {
