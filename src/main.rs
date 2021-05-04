@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 
-mod monsters;
+//mod monsters;
 mod character;
 
 pub struct Materials {
@@ -18,6 +18,7 @@ fn main() {
             vsync: true,
             ..Default::default()
         })
+        
         .add_plugins(DefaultPlugins)
         .run();
 }

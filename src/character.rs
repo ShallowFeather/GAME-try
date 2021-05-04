@@ -1,5 +1,7 @@
 use bevy::input::{ eyboard::KeyCode, Input};
 use bevy::prelude::*;
+use bevy::input::keyboard::KeyboardInput;
+use core::f32::consts::PI;
 
 
 pub struct Directions;
@@ -8,22 +10,24 @@ struct Materials {
     main_material: Handle<ColorMaterial>,
 }
 
-pub fn move_character(input: Res<Input<KeyCode>>, mut path: Query<(&Directions, &mut Transform)>) {
+
+pub fn keyboard_input_system(input: Res<Input<KeyCode>>, mut path: Query<&mut Transform, With<Directions>>) {
     for mut transform in path.iter_mut() {
         if input.pressed(KeyCode::W) {
-            transform
+            transform.rotation = PI * 0.5;
         }
         else if input.pressed(KeyCode::S) {
-
+            transform.rotation = PI * -0.5;
         }
         else if input.pressed(KeyCode::A) {
-
+            transform.rotation = PI * 1.;
         }
         else if input.pressed(KeyCode::D) {
-
+            transform.rotation = PI * 0.;
         }
     }
 }
+
 
 pub fn spawn_character(mut commands: Commands, material: Res<Materials>) {
     commands
