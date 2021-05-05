@@ -1,4 +1,4 @@
-use bevy::input::{ eyboard::KeyCode, Input};
+use bevy::input::{ keyboard::KeyCode, Input};
 use bevy::prelude::*;
 use bevy::input::keyboard::KeyboardInput;
 use core::f32::consts::PI;
@@ -14,16 +14,16 @@ struct Materials {
 pub fn keyboard_input_system(input: Res<Input<KeyCode>>, mut path: Query<&mut Transform, With<Directions>>) {
     for mut transform in path.iter_mut() {
         if input.pressed(KeyCode::W) {
-            transform.rotation = PI * 0.5;
+            transform.rotation.z = PI * 0.5;
         }
         else if input.pressed(KeyCode::S) {
-            transform.rotation = PI * -0.5;
+            transform.rotation.z = PI * -0.5;
         }
         else if input.pressed(KeyCode::A) {
-            transform.rotation = PI * 1.;
+            transform.rotation.z = PI * 1.;
         }
         else if input.pressed(KeyCode::D) {
-            transform.rotation = PI * 0.;
+            transform.rotation.z = PI * 0.;
         }
     }
 }
