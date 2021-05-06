@@ -35,9 +35,10 @@ fn main() {
             vsync: true,
             ..Default::default()
         })
+        .add_plugins(DefaultPlugins)
         .init_resource::<Materials>()
         .add_system(character::spawn_character.system())
-        .add_plugins(DefaultPlugins)
+
         .run();
 }
 
