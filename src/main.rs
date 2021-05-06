@@ -1,16 +1,19 @@
 use bevy::prelude::*;
 use bevy::asset::AssetServer;
+use crate::consts::AppState;
+use crate::character::CharacterPlugin;
 
 
 //mod monsters;
 mod character;
+mod consts;
 
-pub struct Materials {
+pub struct Materialsa {
     character_material: Handle<ColorMaterial>,
     monster_material: Handle<ColorMaterial>,
 }
 
-impl FromWorld for Materials {
+impl FromWorld for Materialsa {
     fn from_world(world: &mut World) -> Self {
         let world = world.cell();
 
@@ -19,7 +22,7 @@ impl FromWorld for Materials {
 
         let character_handle = asset_server.load("images/arrow_blue.png");
         let monster_handle = asset_server.load("images/arrow_red.png");
-        Materials {
+        Materialsa {
             character_material: material.add(character_handle.into()),
             monster_material: material.add(monster_handle.into()),
         }
@@ -28,21 +31,21 @@ impl FromWorld for Materials {
 
 fn main() {
     App::build()
+        .add_plugins(DefaultPlugins)
         .insert_resource(WindowDescriptor {
             title: "I am a window!".to_string(),
             width: 500.,
             height: 300.,
-            vsync: true,
             ..Default::default()
         })
-        .add_plugins(DefaultPlugins)
-        .init_resource::<Materials>()
-        .add_system(character::spawn_character.system())
-
+        .add_state(AppState::Game)
+        .add_plugin(CharacterPlugin)
         .run();
 }
 
 
 fn setup(mut commands: Commands, mut material: ResMut<Assets<ColorMaterial>>){
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
+    commands.spawn_bundle(UiCameraBundle::default());
+
 }

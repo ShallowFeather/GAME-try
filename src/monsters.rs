@@ -9,6 +9,11 @@ struct  MonsterMaterial {
     more_click: Handle<ColorMaterial>,
 }
 
+pub struct MonsterPosition {
+    x: f32,
+    y: f32,
+}
+
 impl FromWorld for MonsterMaterial {
     fn from_world(world: &mut World) -> Self {
         let world = world.cell();
@@ -23,10 +28,7 @@ impl FromWorld for MonsterMaterial {
     }
 }
 
-pub struct MonsterPosition {
-    x: f32,
-    y: f32,
-}
+
 
 struct Monster {
     click: Click,
