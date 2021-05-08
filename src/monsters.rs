@@ -1,67 +1,60 @@
 use bevy::prelude::*;
 use crate::time::ControlledTime;
-use crate::types::*;
-use crate::ScoreResource;
-use bevy::prelude::*;
 
-struct  MonsterMaterial {
-    one_click: Handle<ColorMaterial>,
-    more_click: Handle<ColorMaterial>,
-}
-
-pub struct MonsterPosition {
-    x: f32,
-    y: f32,
-}
-
-impl FromWorld for MonsterMaterial {
-    fn from_world(world: &mut World) -> Self {
-        let world = world.cell();
-        let mut material = world.get_resource_mut::<Assets<ColorMaterial>>().unwrap();
-        let asset_server = world.get_resource::<AssetServer>().unwrap();
-        let one_hit = asset_server.load("images/monster.png");
-        let more_hit = asset_server.load("images/monster.png");
-        MonsterMaterial {
-            one_click: material.add(one_hit.into()),
-            more_click: (material.add(more_hit.into())),
-        }
-    }
+pub struct Monster {
+    direction: Direction,
+    speed: Speed,
 }
 
 
-
-struct Monster {
-    click: Click,
+pub fn spawn_monster_up(mut commands: Commands, materials: Res<crate::Materials>) {
+    let transform = Transform::from_translation(Vec3::new( 0.,450. , 1.));
+    commands
+        .spawn_bundle(SpriteBundle{
+            material: materials.monster_material.clone(),
+            sprite: Sprite::new(Vec2::new(100., 100.)),
+            transform,
+            ..Default::default()
+        })
+        .insert(Monster);
 }
 
-use crate::consts;
-
-fn spawn_monster(mut commands: Commands, mut song_config: ResMut<SongConfig>, materials: Res<MonsterMaterial>, time: Res<ControlledTime>,) {
-    let secs = time.seconds_since_startup() - 2;
-    let secs_last = secs - time.delta_seconds_f64();
-    let mut remove_counter = 0;
-    for monster in &song_config.monsters {
-        if secs_last < monster.spawn_time && monster.spawn_time < secs {
-            remove_counter += 1;
-            let material = match monster.speed {
-                Speed::OneClick => materials.one_click.clone(),
-                Speed::MoreClick => materials.more_click.clone(),
-            };
-            let mut transform_up = Transform::from_translation(Vec3::new(SPAWN_UP_X, SPAWN_UP_Y, 0.));
-
-        }
-    }
-
+pub fn spawn_monster_down(mut commands: Commands, materials: Res<crate::Materials>) {
+    let transform = Transform::from_translation(Vec3::new(0.,-450. , 1.));
+    commands
+        .spawn_bundle(SpriteBundle{
+            material: materials.monster_material.clone(),
+            sprite: Sprite::new(Vec2::new(100., 100.)),
+            transform,
+            ..Default::default()
+        })
+        .insert(Monster);
 }
 
-fn move_monsters(
-    time: Res<Time>,
-    mut query: Query<(&mut Transform, monster)>
-){
-
-    for(mut transform, _monsters) in query.iter_mut() {
-        transform.
-    }
+pub fn spawn_monster_left(mut commands: Commands, materials: Res<crate::Materials>) {
+    let transform = Transform::from_translation(Vec3::new( -700.,0. , 1.));
+    commands
+        .spawn_bundle(SpriteBundle{
+            material: materials.monster_material.clone(),
+            sprite: Sprite::new(Vec2::new(100., 100.)),
+            transform,
+            ..Default::default()
+        })
+        .insert(Monster);
 }
 
+pub fn spawn_monster_right(mut commands: Commands, materials: Res<crate::Materials>) {
+    let transform = Transform::from_translation(Vec3::new( 700.,0. , 1.));
+    commands
+        .spawn_bundle(SpriteBundle{
+            material: materials.monster_material.clone(),
+            sprite: Sprite::new(Vec2::new(100., 100.)),
+            transform,
+            ..Default::default()
+        })
+        .insert(Monster);
+}
 
+pub fn move_monster(time: Res<ControlledTime>, mut query: Query<(Entity, &Monster)>){
+    
+}
