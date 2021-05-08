@@ -5,60 +5,37 @@ use core::f32::consts::PI;
 
 use crate::consts;
 use crate::consts::AppState;
+use bevy::ecs::system::Command;
 
 
-pub struct CharacterMaterials {
-    character_material: Handle<ColorMaterial>,
+pub struct character;
+pub struct characterMaterial {
+    pub(crate) main_material: Handle<ColorMaterial>,
 }
 
-impl FromWorld for CharacterMaterials {
-    fn from_world(world: &mut World) -> Self {
-        let world = world.cell();
-
-        let mut material = world.get_resource_mut::<Assets<ColorMaterial>>().unwrap();
-        let asset_server = world.get_resource::<AssetServer>().unwrap();
-
-        let character_handle = asset_server.load("images/arrow_blue.png");
-        CharacterMaterials {
-            character_material: material.add(character_handle.into()),
+pub fn move_main(key_input: Res<Input<KeyCode>>, mut positions: Query<&mut Transform, With<character>>) {
+    for mut transform in positions.iter_mut() {
+        if key_input.just_pressed(KeyCode::W) {
+            transform.rotation = Quat::from_rotation_z(0.5 * PI);
+        }
+        else if key_input.just_pressed(KeyCode::A) {
+            transform.rotation = Quat::from_rotation_z(1. * PI);
+        }
+        else if key_input.just_pressed(KeyCode::S) {
+            transform.rotation = Quat::from_rotation_z(1.5 * PI);
+        }
+        else if key_input.just_pressed(KeyCode::D) {
+            transform.rotation = Quat::from_rotation_z(0. * PI);
         }
     }
 }
 
-pub fn spawn_character(mut commands: Commands, material: Res<CharacterMaterials>) {
-    let material = material.character_material.clone();
-    commands
-        .spawn_bundle(SpriteBundle {
-            material,
+pub fn spawn_main(mut command: Commands, material: ResMut<characterMaterial>) {
+    command
+        .spawn_bundle(SpriteBundle{
+            material: material.main_material.clone(),
             sprite: Sprite::new(Vec2::new(250., 150.)),
             ..Default::default()
-        });
-}
-
-pub struct  CharacterPlugin;
-impl Plugin for CharacterPlugin {
-    fn build(&self, app: &mut AppBuilder) {
-        app.init_resource::<CharacterMaterials>()
-            .add_system_set(
-                SystemSet::on_update(AppState::Game)
-                    .with_system(spawn_character.system()),
-            );
-    }
-}
-
-pub fn keyboard_input_system(input: Res<Input<KeyCode>>, mut path: Query<&mut Transform>) {
-    for mut transform in path.iter_mut() {
-        if input.pressed(KeyCode::W) {
-            transform.rotate(Quat::from_rotation_z(PI * 0.5));
-        }
-        else if input.pressed(KeyCode::S) {
-            transform.rotate(Quat::from_rotation_z(PI* -0.5));
-        }
-        else if input.pressed(KeyCode::A) {
-            transform.rotate(Quat::from_rotation_z(PI * 1.));
-        }
-        else if input.pressed(KeyCode::D) {
-            transform.rotate(Quat::from_rotation_z(PI * 0.));
-        }
-    }
+        })
+        .insert(character);
 }
