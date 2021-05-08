@@ -1,33 +1,17 @@
 use bevy::prelude::*;
 use bevy::asset::AssetServer;
 use crate::consts::AppState;
-use crate::character::CharacterPlugin;
 
 
-//mod monsters;
-mod character;
 mod consts;
+mod character;
+mod monsters;
 
 pub struct Materialsa {
     character_material: Handle<ColorMaterial>,
     monster_material: Handle<ColorMaterial>,
 }
 
-impl FromWorld for Materialsa {
-    fn from_world(world: &mut World) -> Self {
-        let world = world.cell();
-
-        let mut material = world.get_resource_mut::<Assets<ColorMaterial>>().unwrap();
-        let asset_server = world.get_resource::<AssetServer>().unwrap();
-
-        let character_handle = asset_server.load("images/arrow_blue.png");
-        let monster_handle = asset_server.load("images/arrow_red.png");
-        Materialsa {
-            character_material: material.add(character_handle.into()),
-            monster_material: material.add(monster_handle.into()),
-        }
-    }
-}
 
 fn main() {
     App::build()
@@ -38,14 +22,19 @@ fn main() {
             height: 300.,
             ..Default::default()
         })
-        .add_state(AppState::Game)
-        .add_plugin(CharacterPlugin)
+        //.add_system(character::spawn_character.system())
+        .add_startup_system(setup.system())
+        .add_startup_stage("game_setup", SystemStage::single(character::spawn_main.system()))
+        .add_system(character::move_main.system())
         .run();
 }
 
-
-fn setup(mut commands: Commands, mut material: ResMut<Assets<ColorMaterial>>){
-    commands.spawn_bundle(OrthographicCameraBundle::new_2d());
-    commands.spawn_bundle(UiCameraBundle::default());
-
+fn setup(mut commands: Commands, asset_server: Res<AssetServer>, mut materials: ResMut<Assets<ColorMaterial>>) {
+    let main_handle = asset_server.load("images/arrow_blue.png");
+    commands
+        .spawn_bundle(OrthographicCameraBundle::new_2d())
+        .commands()
+        .insert_resource(character::characterMaterial {
+            main_material: materials.add(main_handle.into())
+        });
 }
