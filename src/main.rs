@@ -7,9 +7,9 @@ mod consts;
 mod character;
 mod monsters;
 
-pub struct Materialsa {
-    character_material: Handle<ColorMaterial>,
-    monster_material: Handle<ColorMaterial>,
+pub struct Materials {
+    pub(crate) character_material: Handle<ColorMaterial>,
+    pub(crate) monster_material: Handle<ColorMaterial>,
 }
 
 
@@ -26,15 +26,21 @@ fn main() {
         .add_startup_system(setup.system())
         .add_startup_stage("game_setup", SystemStage::single(character::spawn_main.system()))
         .add_system(character::move_main.system())
+        .add_system(monsters::spawn_monster_up.system())
+        .add_system(monsters::spawn_monster_down.system())
+        .add_system(monsters::spawn_monster_left.system())
+        .add_system(monsters::spawn_monster_right.system())
         .run();
 }
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>, mut materials: ResMut<Assets<ColorMaterial>>) {
     let main_handle = asset_server.load("images/arrow_blue.png");
+    let monster_handle = asset_server.load("images/monster.png");
     commands
         .spawn_bundle(OrthographicCameraBundle::new_2d())
         .commands()
-        .insert_resource(character::characterMaterial {
-            main_material: materials.add(main_handle.into())
+        .insert_resource(Materials {
+            character_material: materials.add(main_handle.into()),
+            monster_material: materials.add(monster_handle.into()),
         });
 }
