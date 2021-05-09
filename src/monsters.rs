@@ -1,13 +1,14 @@
 use bevy::prelude::*;
-use crate::time::ControlledTime;
+use core::time::*;
 
-pub struct Monster {
-    direction: Direction,
-    speed: Speed,
-}
+pub struct Monster;
 
+pub struct SpawnTimer(Timer);
 
-pub fn spawn_monster_up(mut commands: Commands, materials: Res<crate::Materials>) {
+pub fn spawn_monster_up(mut commands: Commands,
+                        materials: Res<crate::Materials>,
+) {
+
     let transform = Transform::from_translation(Vec3::new( 0.,450. , 1.));
     commands
         .spawn_bundle(SpriteBundle{
@@ -55,6 +56,35 @@ pub fn spawn_monster_right(mut commands: Commands, materials: Res<crate::Materia
         .insert(Monster);
 }
 
-pub fn move_monster(time: Res<ControlledTime>, mut query: Query<(Entity, &Monster)>){
-    
+pub fn move_monster_up(time: Res<Time>, mut query: Query<(&mut Transform, &Monster)>){
+    for (mut transform, _monster) in query.iter_mut() {
+        if transform.translation.y > 200. {
+            transform.translation.y -= time.delta_seconds() * 200.;
+        }
+    }
 }
+
+pub fn move_monster_down(time: Res<Time>, mut query: Query<(&mut Transform, &Monster)>){
+    for (mut transform, _monster) in query.iter_mut() {
+        if transform.translation.y < -200. {
+            transform.translation.y += time.delta_seconds() * 200.;
+        }
+    }
+}
+
+pub fn move_monster_left(time: Res<Time>, mut query: Query<(&mut Transform, &Monster)>){
+    for (mut transform, _monster) in query.iter_mut() {
+        if transform.translation.x > 200. {
+            transform.translation.x -= time.delta_seconds() * 200.;
+        }
+    }
+}
+
+pub fn move_monster_right(time: Res<Time>, mut query: Query<(&mut Transform, &Monster)>){
+    for (mut transform, _monster) in query.iter_mut() {
+        if transform.translation.x < (-200.) {
+            transform.translation.x += time.delta_seconds() * 200.;
+        }
+    }
+}
+
