@@ -26,6 +26,7 @@ fn main() {
         .add_startup_system(setup.system())
         .add_startup_stage("game_setup", SystemStage::single(character::spawn_main.system()))
         .add_system(character::move_main.system())
+        .insert_resource(monsters::SpawnTimer(Timer::from_seconds(1.0, true)))
         .add_system(monsters::spawn_monster_up.system())
         .add_system(monsters::spawn_monster_down.system())
         .add_system(monsters::spawn_monster_left.system())
@@ -34,6 +35,7 @@ fn main() {
         .add_system(monsters::move_monster_down.system())
         .add_system(monsters::move_monster_left.system())
         .add_system(monsters::move_monster_right.system())
+        .add_system(monsters::despawns_monster_right.system())
         .run();
 }
 
