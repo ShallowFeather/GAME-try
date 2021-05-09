@@ -30,6 +30,10 @@ fn main() {
         .add_system(monsters::spawn_monster_down.system())
         .add_system(monsters::spawn_monster_left.system())
         .add_system(monsters::spawn_monster_right.system())
+        .add_system(monsters::move_monster_up.system())
+        .add_system(monsters::move_monster_down.system())
+        .add_system(monsters::move_monster_left.system())
+        .add_system(monsters::move_monster_right.system())
         .run();
 }
 
