@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use core::time::*;
 use bevy::ecs::system::Command;
 use core::f32::consts::PI;
-use bevy::ecs::schedule::IntoRunCriteria;
+use bevy::ecs::schedule::{IntoRunCriteria, SingleThreadedExecutor};
 
 pub struct Monster;
 
@@ -82,7 +82,7 @@ pub fn spawn_monster_right(mut commands: Commands,
 
 pub fn move_monster_up(time: Res<Time>, mut query: Query<(&mut Transform, &Monster)>){
     for (mut transform, _monster) in query.iter_mut() {
-        if transform.translation.y > 100. {
+        if transform.translation.y > 30. {
             transform.translation.y -= time.delta_seconds() * 200.;
         }
     }
@@ -90,14 +90,15 @@ pub fn move_monster_up(time: Res<Time>, mut query: Query<(&mut Transform, &Monst
 
 pub fn move_monster_down(time: Res<Time>, mut query: Query<(&mut Transform, &Monster)>){
     for (mut transform, _monster) in query.iter_mut() {
-        if transform.translation.y < -100. {
+        if transform.translation.y < -30. {
             transform.translation.y += time.delta_seconds() * 200.;
         }
     }
 }
 
-pub fn move_monster_right(time: Res<Time>, mut query: Query<(&mut Transform, &Monster)>){ for (mut transform, _monster) in query.iter_mut() {
-        if transform.translation.x > 100. {
+pub fn move_monster_right(time: Res<Time>, mut query: Query<(&mut Transform, &Monster)>){
+    for (mut transform, _monster) in query.iter_mut() {
+        if transform.translation.x > 30. {
             transform.translation.x -= time.delta_seconds() * 200.;
         }
     }
@@ -105,24 +106,92 @@ pub fn move_monster_right(time: Res<Time>, mut query: Query<(&mut Transform, &Mo
 
 pub fn move_monster_left(time: Res<Time>, mut query: Query<(&mut Transform, &Monster)>){
     for (mut transform, _monster) in query.iter_mut() {
-        if transform.translation.x < (-100.) {
+        if transform.translation.x < (-30.) {
             transform.translation.x += time.delta_seconds() * 200.;
         }
     }
 }
 
-pub fn despawns_monster_right(mut commands: Commands,
-                              keyboard_input: Res<Input<KeyCode>>,
-                              mut monster_positions: Query<(Entity, &mut Transform, &Monster)>,
-                              mut character: Query<&mut Transform, With<crate::character::character>>){
-    let (a,mut b,  transform_a) = character.single().iter_mut();
-    let mut a = transform_a.rotation.z;
-    for (entity, transform, monster) in monster_positions.iter_mut() {
-        let mut posx = transform_a;
-
+pub fn despawns_monster_up(
+    mut commands: Commands,
+    keyboard_input: Res<Input<KeyCode>>,
+    mut monster_positions: Query<(Entity, &mut Transform, &Monster), Without<crate::character::Character>>,
+    character: Query<(Entity, &Transform, &crate::character::Character), Without<Monster>>
+){
+    let (_entity, transform, _character) = character.single().expect("");
+    let path = transform.rotation.z;
+    for (entity, transform, _monster) in monster_positions.iter_mut() {
+        let posx = transform.translation.x;
         let posy = transform.translation.y;
-        let mut path = transform.rotation.z;
-        commands.entity(entity).despawn();
+        if posx == 0. && 175. >= posy && posy >= 150. && path == (0.5 * PI)
+            && keyboard_input.just_pressed(KeyCode::O) {
+            commands.entity(entity).despawn();
+        }
+        else if posy <= 50. && posy >= 0. && posx == 0. {
+            commands.entity(entity).despawn();
+        }
     }
 }
 
+pub fn despawns_monster_down(
+    mut commands: Commands,
+    keyboard_input: Res<Input<KeyCode>>,
+    mut monster_positions: Query<(Entity, &mut Transform, &Monster), Without<crate::character::Character>>,
+    character: Query<(Entity, &Transform, &crate::character::Character), Without<Monster>>
+){
+    let (_entity, transform, _character) = character.single().expect("");
+    let path = transform.rotation.z;
+    for (entity, transform, _monster) in monster_positions.iter_mut() {
+        let posx = transform.translation.x;
+        let posy = transform.translation.y;
+        if posx == 0. && -175. <= posy && posy <= -150. && path == (1.5 * PI)
+            && keyboard_input.just_pressed(KeyCode::O) {
+            commands.entity(entity).despawn();
+        }
+        else if posy >= -50. && posy <= 0. && posx == 0. {
+            commands.entity(entity).despawn();
+        }
+    }
+}
+
+pub fn despawns_monster_left(
+    mut commands: Commands,
+    keyboard_input: Res<Input<KeyCode>>,
+    mut monster_positions: Query<(Entity, &mut Transform, &Monster), Without<crate::character::Character>>,
+    character: Query<(Entity, &Transform, &crate::character::Character), Without<Monster>>
+){
+    let (_entity, transform, _character) = character.single().expect("");
+    let path = transform.rotation.z;
+    for (entity, transform, _monster) in monster_positions.iter_mut() {
+        let posx = transform.translation.x;
+        let posy = transform.translation.y;
+        if posy == 0. && -175. <= posx && posx <= -150. && path == (1. * PI)
+            && keyboard_input.just_pressed(KeyCode::O) {
+            commands.entity(entity).despawn();
+        }
+        else if posx >= -50. && posx <= 0. && posy == 0. {
+            commands.entity(entity).despawn();
+        }
+    }
+}
+
+pub fn despawns_monster_right(
+    mut commands: Commands,
+    keyboard_input: Res<Input<KeyCode>>,
+    mut monster_positions: Query<(Entity, &mut Transform, &Monster), Without<crate::character::Character>>,
+    character: Query<(Entity, &Transform, &crate::character::Character), Without<Monster>>
+){
+        let (_entity, transform, _character) = character.single().expect("");
+        let path = transform.rotation.z;
+        for (entity, transform, _monster) in monster_positions.iter_mut() {
+            let posx = transform.translation.x;
+            let posy = transform.translation.y;
+            if posy == 0. && 175. >= posx && posx >= 150. && path == (0. * PI)
+                && keyboard_input.just_pressed(KeyCode::O) {
+                commands.entity(entity).despawn();
+            }
+            else if posx <= 50. && posx >= 0. && posy == 0. {
+                commands.entity(entity).despawn();
+            }
+        }
+}
