@@ -2,6 +2,7 @@ use bevy::prelude::*;
 use core::time::*;
 use bevy::ecs::system::Command;
 use core::f32::consts::PI;
+use bevy::ecs::schedule::IntoRunCriteria;
 
 pub struct Monster;
 
@@ -112,21 +113,16 @@ pub fn move_monster_left(time: Res<Time>, mut query: Query<(&mut Transform, &Mon
 
 pub fn despawns_monster_right(mut commands: Commands,
                               keyboard_input: Res<Input<KeyCode>>,
-                              mut positions: Query<(Entity, &mut Transform), With<crate::character::Character>>)
-{
-    for mut transform in positions.iter_mut() {
-        transform.
-        let posx = transform.translation.x;
+                              mut monster_positions: Query<(Entity, &mut Transform, &Monster)>,
+                              mut character: Query<&mut Transform, With<crate::character::character>>){
+    let (a,mut b,  transform_a) = character.single().iter_mut();
+    let mut a = transform_a.rotation.z;
+    for (entity, transform, monster) in monster_positions.iter_mut() {
+        let mut posx = transform_a;
+
         let posy = transform.translation.y;
         let mut path = transform.rotation.z;
-        if  posx <= 150. && 100. <= posx
-            && path == (1. * PI)
-            && keyboard_input.just_pressed(KeyCode::O)
-        {
-            commands.entity(entity).despawn();
-        }
-        else if posx > 0. && posx < (110.) && posy == 0. {
-            commands.entity(entity).despawn();
-        }
+        commands.entity(entity).despawn();
     }
 }
+
