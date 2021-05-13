@@ -1,9 +1,8 @@
 use bevy::prelude::*;
 use core::time::*;
 use bevy::ecs::system::Command;
-use core::f32::consts::PI;
 use bevy::ecs::schedule::{IntoRunCriteria, SingleThreadedExecutor};
-
+use core::f32::consts::PI;
 pub struct Monster;
 
 pub struct SpawnTimer(pub Timer);
@@ -116,15 +115,18 @@ pub fn despawns_monster_up(
     mut commands: Commands,
     keyboard_input: Res<Input<KeyCode>>,
     mut monster_positions: Query<(Entity, &mut Transform, &Monster), Without<crate::character::Character>>,
-    character: Query<(Entity, &Transform, &crate::character::Character), Without<Monster>>
-){
+    character: Query<(Entity, &Transform, &crate::character::Character), Without<Monster>>)
+{
     let (_entity, transform, _character) = character.single().expect("");
     let path = transform.rotation.z;
     for (entity, transform, _monster) in monster_positions.iter_mut() {
+        println!("{}", path);
         let posx = transform.translation.x;
         let posy = transform.translation.y;
-        if posx == 0. && 175. >= posy && posy >= 150. && path == (0.5 * PI)
-            && keyboard_input.just_pressed(KeyCode::O) {
+        if posx == 0. && 150. >= posy && posy >= 100.
+            && path == (-0.70710677)
+            && keyboard_input.just_pressed(KeyCode::O)
+        {
             commands.entity(entity).despawn();
         }
         else if posy <= 50. && posy >= 0. && posx == 0. {
@@ -142,9 +144,10 @@ pub fn despawns_monster_down(
     let (_entity, transform, _character) = character.single().expect("");
     let path = transform.rotation.z;
     for (entity, transform, _monster) in monster_positions.iter_mut() {
+
         let posx = transform.translation.x;
         let posy = transform.translation.y;
-        if posx == 0. && -175. <= posy && posy <= -150. && path == (1.5 * PI)
+        if posx == 0. && -175. <= posy && posy <= -150. && path == (0.70710677)
             && keyboard_input.just_pressed(KeyCode::O) {
             commands.entity(entity).despawn();
         }
@@ -165,7 +168,7 @@ pub fn despawns_monster_left(
     for (entity, transform, _monster) in monster_positions.iter_mut() {
         let posx = transform.translation.x;
         let posy = transform.translation.y;
-        if posy == 0. && -175. <= posx && posx <= -150. && path == (1. * PI)
+        if posy == 0. && -175. <= posx && posx <= -150. && path == (1.)
             && keyboard_input.just_pressed(KeyCode::O) {
             commands.entity(entity).despawn();
         }
@@ -181,16 +184,16 @@ pub fn despawns_monster_right(
     mut monster_positions: Query<(Entity, &mut Transform, &Monster), Without<crate::character::Character>>,
     character: Query<(Entity, &Transform, &crate::character::Character), Without<Monster>>
 ){
-        let (_entity, transform, _character) = character.single().expect("");
-        let path = transform.rotation.z;
-        for (entity, transform, _monster) in monster_positions.iter_mut() {
-            let posx = transform.translation.x;
-            let posy = transform.translation.y;
-            if posy == 0. && 175. >= posx && posx >= 150. && path == (0. * PI)
-                && keyboard_input.just_pressed(KeyCode::O) {
-                commands.entity(entity).despawn();
-            }
-            else if posx <= 50. && posx >= 0. && posy == 0. {
+    let (_entity, transform, _character) = character.single().expect("");
+    let path = transform.rotation.z;
+    for (entity, transform, _monster) in monster_positions.iter_mut() {
+        let posx = transform.translation.x;
+        let posy = transform.translation.y;
+        if posy == 0. && 175. >= posx && posx >= 150. && path == (0.)
+            && keyboard_input.just_pressed(KeyCode::O) {
+            commands.entity(entity).despawn();
+        }
+        else if posx <= 50. && posx >= 0. && posy == 0. {
                 commands.entity(entity).despawn();
             }
         }
