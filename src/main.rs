@@ -7,9 +7,9 @@ mod consts;
 mod character;
 mod monsters;
 
-pub struct Materials {
-    pub(crate) character_material: Handle<ColorMaterial>,
-    pub(crate) monster_material: Handle<ColorMaterial>,
+pub struct Materials{
+    pub(crate)character_material: Handle<ColorMaterial>,
+    pub(crate)monster_material: Handle<ColorMaterial>,
 }
 
 
